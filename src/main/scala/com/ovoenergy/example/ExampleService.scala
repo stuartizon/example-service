@@ -6,9 +6,12 @@ import com.ovoenergy.commons.lang.ConfigProvider
 import com.ovoenergy.commons.monitoring.MdcLogging
 import com.ovoenergy.commons.service.{DetailedServiceResponseRejectionHandler, HttpServiceActor, PingResource, TcpListener}
 import com.ovoenergy.example.resources.ExampleResource
+import kamon.Kamon
 import spray.can.Http
 
 object ExampleService extends App with ConfigProvider {
+  Kamon.start()
+
   implicit val system = ActorSystem("example-service")
   val port = config.getInt("http-service.port")
   val tcpListener = system.actorOf(Props[TcpListener], "tcp-listener")
@@ -19,10 +22,12 @@ object ExampleService extends App with ConfigProvider {
 class ExampleService extends HttpServiceActor with MdcLogging with PingResource with ExampleResource with DetailedServiceResponseRejectionHandler {
   def receive = runRoute {
     ping ~
-      logRequestResponseContext {
-        handleRejections(serviceRejectionHandler) {
-          handleExceptions(exceptionHandler) {
-            exampleResource
+      trace {
+        logRequestResponseContext {
+          handleRejections(serviceRejectionHandler) {
+            handleExceptions(exceptionHandler) {
+              exampleResource
+            }
           }
         }
       }

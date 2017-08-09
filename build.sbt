@@ -10,4 +10,6 @@ libraryDependencies ++= Seq(
   "com.ovoenergy" %% "commons-client" % "1.2.+",
   "com.ovoenergy" %% "commons-service" % "1.2.+",
   "com.ovoenergy" %% "commons-monitoring" % "1.2.+",
-  "ch.qos.logback" % "logback-classic" % "1.2.3")
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "io.kamon" %% "kamon-influxdb" % "0.6.3"
+)
